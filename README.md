@@ -20,6 +20,7 @@ This repository produces all those docker images:
     cat >local/setup/reconfigure.yml << EOF
     ---
     setting: value
+    EOF
     ```
 
 ### Configuring via ansible
@@ -31,20 +32,21 @@ This repository produces all those docker images:
 ```yaml
 cops_dbsmartbackup_confs:
   mydb:
-	conf_path: /srv/backups/mydb.conf
-	keep_lasts: 1
-	keep_days: 2
-	keep_logs: 7
-	_periodicity: "0 3 * * *"
-	free_form: |
-		export BACKUP_TYPE=postgres
-        export HOST="foohost"
-        export PORT="5432"
-        export DBNAMES="db"
-        export PASSWORD="xxx"
-        export DBUSER="yyy"
-        export PGUSER="zzz"
-        export PGPASSWORD="$PASSWORD"
+    conf_path: /srv/backups/mydb.conf
+    keep_lasts: 1
+    type: postgres
+    keep_days: 2
+    keep_logs: 7
+    _periodicity: "0 3 * * *"
+    free_form: |
+      export HOST="172.17.0.2"
+      export PORT="5432"
+      export DBNAMES="db"
+      export PASSWORD="nJc5lqDBggXldF7"
+      export DBUSER="dbuser"
+      export PGUSER="$DBUSER"
+      export RUNAS=""
+      export PGPASSWORD="$PASSWORD"
 ```
 
 ### Configuring manually
@@ -55,32 +57,33 @@ cops_dbsmartbackup_confs:
 
 - Eg ``data/mydb.conf``(``data``mounted to ``/srv/backups``)
     ```sh
-	# A script can run only for one database type
-	# and a specific host
-	cfgpath="/etc/dbsmartbackup/postgresql_xxx.conf"
-	DO_GLOBAL_BACKUP=""
-	BACKUP_TYPE="postgresql"
-	KEEP_LASTS="3"
-	KEEP_DAYS="3"
-	KEEP_WEEKS="0"
-	KEEP_MONTHES="0"
-	KEEP_LOGS="7"
-	TOP_BACKUPDIR="/srv/backups"
-	export HOST="foohost"
-	export PORT="5432"
-	export DBNAMES="db"
-	export PASSWORD="xxx"
-	export DBUSER="yyy"
-	export PGUSER="zzz"
-	export PGPASSWORD="$PASSWORD"
-	if [ -f "${cfgpath}.local" ];then
-	    . "${cfgpath}.local"
-	fi
+  # A script can run only for one database type
+  # and a specific host
+  cfgpath="/etc/dbsmartbackup/postgresql_xxx.conf"
+  DO_GLOBAL_BACKUP=""
+  BACKUP_TYPE="postgresql"
+  KEEP_LASTS="3"
+  KEEP_DAYS="3"
+  KEEP_WEEKS="0"
+  KEEP_MONTHES="0"
+  KEEP_LOGS="7"
+  TOP_BACKUPDIR="/srv/backups"
+  export HOST="foohost"
+  export PORT="5432"
+  export DBNAMES="db"
+  export PASSWORD="xxx"
+  export DBUSER="yyy"
+  export PGUSER="$DBUSER"
+  export PGPASSWORD="$PASSWORD"
+  export RUNAS=""
+  if [ -f "${cfgpath}.local" ];then
+      . "${cfgpath}.local"
+  fi
     ```
 
 - Eg ``mycron`` (mounted to ``/etc/cron.d/mydbbackup``)
     ```crontab
-	0 3 * * * root /srv/apps/dbsmartbackup/run_dbsmartbackup.sh /srv/backups/mydb.conf --quiet --no-colors
+  0 3 * * * root /srv/apps/dbsmartbackup/run_dbsmartbackup.sh /srv/backups/mydb.conf --quiet --no-colors
     ```
 
 ### Run this image through docker
