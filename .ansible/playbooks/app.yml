@@ -1,0 +1,47 @@
+---
+- hosts: "{{dbsmartbackup_servers|default('all')}}"
+  roles:
+    - role: corpusops.roles/ansible_plugins
+  tasks:
+    - include_tasks: tasks/load_vars.yml
+      tags: [cops_dbsmartbackup_lifecycle_app]
+      when: "cops_dbsmartbackup_lifecycle_app|default(true)"
+    - when: "cops_dbsmartbackup_lifecycle_app"
+      tags: [cops_dbsmartbackup_lifecycle_app]
+      become: true
+      block:
+      - become: true
+        become_user: postgres
+        block:
+          - shell: |
+              test -e /usr/bin/db_smart_backup.sh
+              test -e /etc/dbsmartbackup/postgresql.conf.notdone
+            failed_when: false
+            changed_when: false
+            register: cops_setup_databases_test1
+            no_log: true
+            become_user: postgres
+          - set_fact: {cops_test_no_db: false, cacheable: false}
+        rescue:
+          - set_fact: {cops_test_no_db: true,  cacheable: false}
+      - set_fact:
+          cacheable: false
+          cops_dbsmartbackup_lifecycle_app_setup: >-
+            (((not vars.get('SKIP_INSTALL_DBSMARTBACKUP', False)) and
+             ((cops_test_no_db))) or
+               cops_dbsmartbackup_lifecycle_app|default(false) or
+             (vars.get('FORCE_INSTALL_DBSMARTBACKUP', False)))
+
+- hosts: "{{dbsmartbackup_servers|default('all')}}"
+  tasks:
+    - tags: [cops_dbsmartbackup_lifecycle_app_push_code,cops_dbsmartbackup_lifecycle_app]
+      when: "cops_dbsmartbackup_lifecycle_app_push_code|default(cops_dbsmartbackup_lifecycle_app)"
+      block:
+      - include_tasks: tasks/lc_push_code.yml
+
+- hosts: "{{dbsmartbackup_servers|default('all')}}"
+  tasks:
+    - tags: [cops_dbsmartbackup_lifecycle_app_setup,cops_dbsmartbackup_lifecycle_app]
+      when: "cops_dbsmartbackup_lifecycle_app_setup|default(cops_dbsmartbackup_lifecycle_app)"
+      block:
+      - include_tasks: tasks/lc_app.yml

@@ -1,0 +1,4 @@
+---
+cops_dbsmartbackup_domain: "{{cops_app_name}}.vbox.local"
+cops_installer_mode: vagrant
+cops_dbsmartbackup_ep_playbook: "site_vagrant.yml"

@@ -1,0 +1,76 @@
+---
+- debug:
+    msg: "{{backup_conf_item.value}}"
+- when: backup_conf_item.value|copsf_isdict
+  block:
+  - set_fact:
+      cacheable: false
+      cops_backup_conf_itemc: |-
+        {% set d = {} %}
+        {% set _ = d.update({'itemk': backup_conf_item.key}) %}
+        {% set _ = d.update(cops_dbsmartbackup_vars.default_conf.copy()) %}
+        {% set _ = d.update(backup_conf_item.value.copy()) %}
+        {% set adname = (backup_conf_item.key|copsf_basename) %}
+        {% if '.' in adname %}
+        {% set dname = '.'.join(adname.split('.')[:-1]) %}
+        {% else %}
+        {% set dname = adname %}
+        {% endif %}
+        {% set _ = d.update({'default_name': dname}) %}
+        {% if not d.name %}
+        {% set _ = d.update({'name': dname}) %}
+        {% endif %}
+        {% set _ = d.setdefault('conf_path',
+            "/etc/dbsmartbackup/{type}_{name}.conf".format(**d)) %}
+        {% set _ = d.setdefault('cron_path',
+            "/etc/cron.d/dbsmartbackup_{type}_{name}".format(**d)) %}
+        {{ d | copsf_format_resolve | to_json }}
+  - assert:
+      that:
+        - "cops_backup_conf_itemc.name is not none"
+        - "cops_backup_conf_itemc.type is not none"
+      msg: "backup config item is not valid"
+  - copy:
+      force: true
+      mode: "0600"
+      dest: "{{cops_backup_conf_itemc.conf_path}}"
+      content: |-
+          # A script can run only for one database type
+          # and a specific host
+          {% set d = cops_backup_conf_itemc %}
+          cfgpath="{{d.conf_path}}"
+          DO_GLOBAL_BACKUP="{{d.global_backup}}"
+          BACKUP_TYPE="{{d.type}}"
+          KEEP_LASTS="{{d.keep_lasts}}"
+          KEEP_DAYS="{{d.keep_days}}"
+          KEEP_WEEKS="{{d.keep_weeks}}"
+          KEEP_MONTHES="{{d.keep_monthes}}"
+          KEEP_LOGS="{{d.keep_logs}}"
+          TOP_BACKUPDIR="{{(
+           d.get('top_backupdir', none) or
+           '{0}'.format(d.backup_path_prefix)
+          )}}"
+          {{d.get('free_form', '')}}
+          if [ -f "${cfgpath}.local" ];then
+              . "${cfgpath}.local"
+          fi
+          # vim: set ft=sh:
+  - name: configs
+    copy:
+      dest: "{{cops_backup_conf_itemc.cron_path}}"
+      content: |
+        {% set d = cops_backup_conf_itemc %}
+        {% if d.get('cron_mailto', none) %}
+        MAILTO="{{d.cron_mailto}}"
+        {% endif %}
+        {{d.cron.format(**d)}}
+      mode: "0600"
+      force: true
+      owner: root
+      group: root
+    when: "cops_backup_conf_itemc.get('cron', none)"
+  - name: remove configs if cron is disabled
+    file:
+      path: "{{cops_backup_conf_itemc.cron_path}}"
+      state: absent
+    when: "not cops_backup_conf_itemc.get('cron', none)"

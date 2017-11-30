@@ -1,0 +1,4 @@
+---
+# compute app settings
+- include_role: {name: ./roles/dbsmartbackup}
+  become: "{{cops_dbsmartbackup_vars.become}}"

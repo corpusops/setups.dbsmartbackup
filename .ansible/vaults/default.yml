@@ -1,0 +1,4 @@
+---
+cops_app_name: dbsmartbackup
+cops_installer_mode: lazy
+# vim:set ft=sls:

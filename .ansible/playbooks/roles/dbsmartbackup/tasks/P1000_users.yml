@@ -1,0 +1,14 @@
+---
+- group:
+    name: "{{cops_dbsmartbackup_vars.group}}"
+    state: present
+  tags: [cops_dbsmartbackup_s_users_group]
+  when: cops_dbsmartbackup_s_users_group
+- user:
+    group: "{{cops_dbsmartbackup_vars.group}}"
+    name: "{{cops_dbsmartbackup_vars.user}}"
+    state: present
+    append: true
+    generate_ssh_key: true
+  tags: [cops_dbsmartbackup_s_users_user]
+  when: cops_dbsmartbackup_s_users_user
