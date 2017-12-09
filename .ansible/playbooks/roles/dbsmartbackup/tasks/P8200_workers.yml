@@ -25,5 +25,3 @@
   retries: 10
   delay: 1
   tags: [dbsmartbackup, workers_check, dbsmartbackup_workers_check]
-  become: true
-  become_user: postgres
