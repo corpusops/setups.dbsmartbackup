@@ -18,7 +18,7 @@ env:
   matrix:
     - |
       __VERSION__="latest" \
-      IMAGE="packer__${__VERSION__}.json"  \
+      IMAGE="packer__${__NAME__}-${__VERSION__}.json"  \
       DOCKER_IMAGE="corpusops/${__NAME__}:${__VERSION__}"
 language: python
 python: "2.7"
