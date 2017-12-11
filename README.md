@@ -83,7 +83,7 @@ cops_dbsmartbackup_confs:
 
 - Eg ``mycron`` (mounted to ``/etc/cron.d/mydbbackup``)
     ```crontab
-  0 3 * * * root /srv/apps/dbsmartbackup/run_dbsmartbackup.sh /srv/backups/mydb.conf --quiet --no-colors
+    0 3 * * * root /srv/apps/dbsmartbackup/run_dbsmartbackup.sh /srv/backups/mydb.conf --quiet --no-colors
     ```
 
 ### Run this image through docker

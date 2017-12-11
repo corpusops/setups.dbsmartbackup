@@ -11,7 +11,7 @@ env:
       funcs="$COPS_ROOT/bin/cops_shell_common" \
       silent="$funcs output_in_error silent_vv" \
       apply_role="sudo -E $silent $COPS_ROOT/bin/cops_apply_role -vvvvv" \
-      install="sudo -E $silent $COPS_ROOT/bin/install.sh" \
+      install="$silent $COPS_ROOT/bin/install.sh" \
       sync_code="$install -C --synchronize-code --skip-sync-core" \
       release="$COPS_ROOT/hacking/docker_release" \
       silent_rm="$silent rm -rf"
@@ -27,10 +27,10 @@ before_install:
   - sudo service docker stop
   - "[ -e $COPS_ROOT/.git ] || git clone $COPS_URL $COPS_ROOT"
   - cd $COPS_ROOT
+  - i=$(whoami) && sudo chown -Rf $i $COPS_ROOT
   - git fetch origin && git reset --hard origin/master
   - $install -C -S
   - $sync_code || ( $silent_rm $COPS_ROOT/{roles,playbooks}/corpusops* && $sync_code )
-  - i=$(whoami) && sudo chown -Rf $i $COPS_ROOT
 install:
   - cd $COPS_ROOT
   - sh -c "$apply_role roles/corpusops.roles/localsettings_packer/role.yml"
