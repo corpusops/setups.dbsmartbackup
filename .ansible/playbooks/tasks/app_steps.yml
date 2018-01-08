@@ -5,24 +5,23 @@
       only_steps: "{{only_steps|default(False)}}"
   - set_fact:
       cacheable: false
-      cops_dbsmartbackup_lifecycle_app_push_code: "{{cops_dbsmartbackup_lifecycle_app|default(cops_dbsmartbackup_lifecycle_app_push_code|default(not only_steps))}}"
+      cops_dbsmartbackup_lifecycle_app_push_code: "{{cops_dbsmartbackup_lifecycle_app_push_code|default(cops_dbsmartbackup_lifecycle_app|default(not only_steps))}}"
   - set_fact:
       cacheable: false
-      cops_dbsmartbackup_s_prerequisites_client_postgresql:   "{{cops_dbsmartbackup_s_prerequisites_client_postgresql |default(cops_dbsmartbackup_s_prerequisites|default(cops_dbsmartbackup_lifecycle_app_setup|default(not only_steps)))}}"
-      cops_dbsmartbackup_s_prerequisites_pkgs:                "{{cops_dbsmartbackup_s_prerequisites_pkgs              |default(cops_dbsmartbackup_s_prerequisites|default(cops_dbsmartbackup_lifecycle_app_setup|default(not only_steps)))}}"
-      cops_dbsmartbackup_s_prerequisites_dbsmartbackup:       "{{cops_dbsmartbackup_s_prerequisites_dbsmartbackup     |default(cops_dbsmartbackup_s_prerequisites|default(cops_dbsmartbackup_lifecycle_app_setup|default(not only_steps)))}}"
-      cops_dbsmartbackup_s_setup_configs:                     "{{cops_dbsmartbackup_s_setup_configs                   |default(cops_dbsmartbackup_s_setup        |default(cops_dbsmartbackup_lifecycle_app_setup|default(not only_steps)))}}"
-      cops_dbsmartbackup_s_setup_backup_confs:                "{{cops_dbsmartbackup_s_setup_backup_confs              |default(cops_dbsmartbackup_s_setup        |default(cops_dbsmartbackup_lifecycle_app_setup|default(not only_steps)))}}"
+      cops_dbsmartbackup_s_prerequisites_client_postgresql:   "{{cops_dbsmartbackup_s_prerequisites_client_postgresql |default(cops_dbsmartbackup_s_prerequisites|default(cops_dbsmartbackup_lifecycle_app_setup|default(cops_dbsmartbackup_lifecycle_app|default(not only_steps))))}}"
+      cops_dbsmartbackup_s_prerequisites_pkgs:                "{{cops_dbsmartbackup_s_prerequisites_pkgs              |default(cops_dbsmartbackup_s_prerequisites|default(cops_dbsmartbackup_lifecycle_app_setup|default(cops_dbsmartbackup_lifecycle_app|default(not only_steps))))}}"
+      cops_dbsmartbackup_s_prerequisites_dbsmartbackup:       "{{cops_dbsmartbackup_s_prerequisites_dbsmartbackup     |default(cops_dbsmartbackup_s_prerequisites|default(cops_dbsmartbackup_lifecycle_app_setup|default(cops_dbsmartbackup_lifecycle_app|default(not only_steps))))}}"
+      cops_dbsmartbackup_s_setup_configs:                     "{{cops_dbsmartbackup_s_setup_configs                   |default(cops_dbsmartbackup_s_setup        |default(cops_dbsmartbackup_lifecycle_app_setup|default(cops_dbsmartbackup_lifecycle_app|default(not only_steps))))}}"
+      cops_dbsmartbackup_s_setup_backup_confs:                "{{cops_dbsmartbackup_s_setup_backup_confs              |default(cops_dbsmartbackup_s_setup        |default(cops_dbsmartbackup_lifecycle_app_setup|default(cops_dbsmartbackup_lifecycle_app|default(not only_steps))))}}"
   - set_fact:
       cacheable: false
-      cops_dbsmartbackup_s_users:          "{{cops_dbsmartbackup_s_users         |default(cops_dbsmartbackup_lifecycle_app_setup|default(not only_steps))}}"
-      cops_dbsmartbackup_s_layout:         "{{cops_dbsmartbackup_s_layout        |default(cops_dbsmartbackup_lifecycle_app_setup|default(not only_steps))}}"
-      cops_dbsmartbackup_s_first_fixperms: "{{cops_dbsmartbackup_s_first_fixperms|default(cops_dbsmartbackup_lifecycle_app_setup|default(not only_steps))}}"
-      cops_dbsmartbackup_s_workers:        "{{cops_dbsmartbackup_s_workers       |default(cops_dbsmartbackup_lifecycle_app_setup|default(not only_steps))}}"
-      cops_dbsmartbackup_s_entry_point:    "{{cops_dbsmartbackup_s_entry_point   |default(cops_dbsmartbackup_lifecycle_app_setup|default(not only_steps))}}"
-      cops_dbsmartbackup_s_end_fixperms:   "{{cops_dbsmartbackup_s_end_fixperms  |default(cops_dbsmartbackup_lifecycle_app_setup|default(not only_steps))}}"
-      cops_dbsmartbackup_s_managecontent: "{{(
-          not only_steps)}}"
+      cops_dbsmartbackup_s_users:          "{{cops_dbsmartbackup_s_users         |default(cops_dbsmartbackup_lifecycle_app_setup|default(cops_dbsmartbackup_lifecycle_app|default(not only_steps)))}}"
+      cops_dbsmartbackup_s_layout:         "{{cops_dbsmartbackup_s_layout        |default(cops_dbsmartbackup_lifecycle_app_setup|default(cops_dbsmartbackup_lifecycle_app|default(not only_steps)))}}"
+      cops_dbsmartbackup_s_first_fixperms: "{{cops_dbsmartbackup_s_first_fixperms|default(cops_dbsmartbackup_lifecycle_app_setup|default(cops_dbsmartbackup_lifecycle_app|default(not only_steps)))}}"
+      cops_dbsmartbackup_s_workers:        "{{cops_dbsmartbackup_s_workers       |default(cops_dbsmartbackup_lifecycle_app_setup|default(cops_dbsmartbackup_lifecycle_app|default(not only_steps)))}}"
+      cops_dbsmartbackup_s_entry_point:    "{{cops_dbsmartbackup_s_entry_point   |default(cops_dbsmartbackup_lifecycle_app_setup|default(cops_dbsmartbackup_lifecycle_app|default(not only_steps)))}}"
+      cops_dbsmartbackup_s_end_fixperms:   "{{cops_dbsmartbackup_s_end_fixperms  |default(cops_dbsmartbackup_lifecycle_app_setup|default(cops_dbsmartbackup_lifecycle_app|default(not only_steps)))}}"
+      cops_dbsmartbackup_s_managecontent:  "{{cops_dbsmartbackup_s_managecontent |default(cops_dbsmartbackup_lifecycle_app_setup|default(cops_dbsmartbackup_lifecycle_app|default(not only_steps)))}}"
       cops_dbsmartbackup_s_prerequisites: "{{(
           cops_dbsmartbackup_s_prerequisites_pkgs or
           cops_dbsmartbackup_s_prerequisites_dbsmartbackup or
@@ -46,8 +45,8 @@
   - set_fact:
       cacheable: false
       cops_dbsmartbackup_lifecycle_app_setup: "{{(cops_dbsmartbackup_lifecycle_app_setup|default(
-                                                (cops_dbsmartbackup_lifecycle_app|default(False)) or (
-                                                  cops_dbsmartbackup_lifecycle_app_level_1_steps)))}}"
+                                                  (cops_dbsmartbackup_lifecycle_app|default(False)) or (
+                                                    cops_dbsmartbackup_lifecycle_app_level_1_steps)))}}"
   - set_fact:
       cacheable: false
       cops_dbsmartbackup_lifecycle_app: "{{(
@@ -55,10 +54,4 @@
         cops_dbsmartbackup_lifecycle_app_setup)}}"
   - set_fact:
       cacheable: false
-      cops_dbsmartbackup_lifecycle_app_lc_1_steps: "{{(
-          cops_dbsmartbackup_lifecycle_app)}}"
-  - set_fact:
-      cacheable: false
-      cops_dbsmartbackup_s_vars: "{{cops_dbsmartbackup_s_vars|default(cops_dbsmartbackup_lifecycle_app_lc_1_steps)}}"
-
-
+      cops_dbsmartbackup_s_vars: "{{cops_dbsmartbackup_s_vars|default(cops_dbsmartbackup_lifecycle_app)}}"
