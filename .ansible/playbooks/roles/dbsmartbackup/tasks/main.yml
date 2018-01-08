@@ -1,28 +1,30 @@
 ---
-- include_tasks: P1000_users.yml
-  tags: [dbsmartbackup, users, dbsmartbackup_users, cops_dbsmartbackup_s_users]
-  when: "cops_dbsmartbackup_s_users"
-- include_tasks: P2000_layout.yml
-  tags: [dbsmartbackup, layout, dbsmartbackup_layout, cops_dbsmartbackup_s_layout]
-  when: "cops_dbsmartbackup_s_layout"
-- include_tasks: G9000_fixperms.yml
-  tags: [dbsmartbackup, first_fixperms, dbsmartbackup_first_fixperms, cops_dbsmartbackup_s_first_fixperms]
-  when: "cops_dbsmartbackup_s_first_fixperms"
-- include_tasks: P4000_prerequisites.yml
-  tags: [dbsmartbackup, prerequisites, dbsmartbackup_prerequisites, cops_dbsmartbackup_s_prerequisites]
-  when: "cops_dbsmartbackup_s_prerequisites"
-- include_tasks: P4500_setup.yml
-  tags: [dbsmartbackup, setup, dbsmartbackup_setup, cops_dbsmartbackup_s_setup]
-  when: "cops_dbsmartbackup_s_setup"
-- include_tasks: P8000_entry_point.yml
-  tags: [dbsmartbackup, entry_point, dbsmartbackup_entry_point, cops_dbsmartbackup_s_entry_point]
-  when: "cops_dbsmartbackup_s_entry_point"
-- include_tasks: P8200_workers.yml
-  tags: [dbsmartbackup, workers, dbsmartbackup_workers, cops_dbsmartbackup_s_workers]
-  when: "cops_dbsmartbackup_s_workers"
-- include_tasks: P8500_manage_content.yml
-  tags: [dbsmartbackup, manage_content, dbsmartbackup_managecontent, cops_dbsmartbackup_s_managecontent]
-  when: "cops_dbsmartbackup_s_managecontent"
-- include_tasks: G9000_fixperms.yml
-  tags: [dbsmartbackup, end_fixperms, dbsmartbackup_end_fixperms, cops_dbsmartbackup_s_end_fixperms]
-  when: "cops_dbsmartbackup_s_end_fixperms"
+- tags: [cops_dbsmartbackup, dbsmartbackup]
+  block:
+  - include_tasks: P1000_users.yml
+    tags: [cops_dbsmartbackup_s_users]
+    when: [cops_dbsmartbackup_s_users]
+  - include_tasks: P2000_layout.yml
+    tags: [cops_dbsmartbackup_s_layout]
+    when: [cops_dbsmartbackup_s_layout]
+  - include_tasks: G9000_fixperms.yml
+    tags: [cops_dbsmartbackup_s_first_fixperms]
+    when: [cops_dbsmartbackup_s_first_fixperms]
+  - include_tasks: P4000_prerequisites.yml
+    tags: [cops_dbsmartbackup_s_prerequisites]
+    when: [cops_dbsmartbackup_s_prerequisites]
+  - include_tasks: P4500_setup.yml
+    tags: [cops_dbsmartbackup_s_setup]
+    when: [cops_dbsmartbackup_s_setup]
+  - include_tasks: P8000_entry_point.yml
+    tags: [cops_dbsmartbackup_s_entry_point]
+    when: [cops_dbsmartbackup_s_entry_point]
+  - include_tasks: P8200_workers.yml
+    tags: [cops_dbsmartbackup_s_workers]
+    when: [cops_dbsmartbackup_s_workers]
+  - include_tasks: P8500_manage_content.yml
+    tags: [cops_dbsmartbackup_s_managecontent]
+    when: [cops_dbsmartbackup_s_managecontent]
+  - include_tasks: G9000_fixperms.yml
+    tags: [cops_dbsmartbackup_s_end_fixperms]
+    when: [cops_dbsmartbackup_s_end_fixperms]

@@ -1,11 +1,11 @@
 ---
 - include_tasks: _setup_configs.yml
   tags: [cops_dbsmartbackup_s_setup_configs]
-  when: "cops_dbsmartbackup_s_setup_configs"
+  when: [cops_dbsmartbackup_s_setup_configs]
   notify: "{{cops_dbsmartbackup_vars.rhandlers}}"
 - include_tasks: _generate_conf.yml
   with_dict: "{{cops_dbsmartbackup_vars.confs}}"
   tags: [cops_dbsmartbackup_s_setup_backup_confs]
-  when: "cops_dbsmartbackup_s_setup_backup_confs"
+  when: [cops_dbsmartbackup_s_setup_backup_confs]
   loop_control: {loop_var: backup_conf_item}
   notify: "{{cops_dbsmartbackup_vars.rhandlers}}"

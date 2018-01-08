@@ -117,6 +117,7 @@ cops_dbsmartbackup_s_setup: true
 cops_dbsmartbackup_s_setup_configs: true
 cops_dbsmartbackup_s_setup_backup_confs: true
 cops_dbsmartbackup_s_workers_service: true
+cops_dbsmartbackup_s_workers_checks: true
 cops_dbsmartbackup_s_end_fixperms: true
 cops_dbsmartbackup_s_managecontent: true
 #
