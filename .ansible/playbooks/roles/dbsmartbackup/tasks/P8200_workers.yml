@@ -21,10 +21,8 @@
   - meta: flush_handlers
 
 # check cron is running
-- tags: ["cops_dbsmartbackup_s_workers_checks"]
-  when: ["cops_dbsmartbackup_s_workers_checks and (
-          corpusops_vars.has_services_manager and
-          cops_dbsmartbackup_vars.activated)"]
+- tags: [cops_dbsmartbackup_s_workers_checks]
+  when: [cops_dbsmartbackup_s_workers_checks]
   block:
   - shell: |
       service cron status >/dev/null 2>&1
