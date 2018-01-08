@@ -23,7 +23,7 @@ python: "2.7"
 before_install:
   - sudo apt-get update -qq
   - sudo service docker stop
-  - $silent .ansible/scripts/download_corpusops.sh
+  - .ansible/scripts/download_corpusops.sh
   - $silent .ansible/scripts/setup_corpusops.sh
 install:
   - sh -c "$apply_role $COPS_ROOT/roles/corpusops.roles/localsettings_packer/role.yml"
