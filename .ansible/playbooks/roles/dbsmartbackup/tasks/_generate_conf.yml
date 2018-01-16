@@ -30,6 +30,9 @@
         - "cops_backup_conf_itemc.name is not none"
         - "cops_backup_conf_itemc.type is not none"
       msg: "backup config item is not valid"
+  - file:
+      state: directory
+      path: "{{cops_backup_conf_itemc.conf_path|copsf_dirname}}"
   - copy:
       force: true
       mode: "0600"
