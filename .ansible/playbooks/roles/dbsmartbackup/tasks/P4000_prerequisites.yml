@@ -22,6 +22,9 @@
             cops_dbsmartbackup_vars.rh_packages is not none and
             cops_dbsmartbackup_vars.rh_packages|length > 0)"
     with_items: "{{cops_dbsmartbackup_vars.rh_packages}}"
+- include_role: {name: corpusops.roles/services_db_mysql_client}
+  tags: [cops_dbsmartbackup_s_prerequisites_client_mysql]
+  when: [cops_dbsmartbackup_s_prerequisites_client_mysql]
 - include_role: {name: corpusops.roles/services_db_postgresql_client}
   tags: [cops_dbsmartbackup_s_prerequisites_client_postgresql]
   when: [cops_dbsmartbackup_s_prerequisites_client_postgresql]
