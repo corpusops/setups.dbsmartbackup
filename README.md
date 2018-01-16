@@ -42,11 +42,26 @@ cops_dbsmartbackup_confs:
       export HOST="172.17.0.2"
       export PORT="5432"
       export DBNAMES="db"
-      export PASSWORD="nJc5lqDBggXldF7"
+      export PASSWORD="xxxx"
       export DBUSER="dbuser"
       export PGUSER="$DBUSER"
       export RUNAS=""
       export PGPASSWORD="$PASSWORD"
+  mymysqldb:
+    conf_path: /srv/backups/mysql.conf
+    keep_lasts: 1
+    type: mysql
+    keep_days: 2
+    keep_logs: 7
+    _periodicity: "0 3 * * *"
+    free_form: |
+      export HOST="mysql"
+      export PORT="3306"
+      export MYSQL_PORT="$PORT"
+      export DBNAMES="yyy"
+      export PASSWORD="xxx"
+      export DBUSER="ocs"
+      export RUNAS=""
 ```
 
 ### Configuring manually
