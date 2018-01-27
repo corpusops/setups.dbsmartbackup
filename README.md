@@ -34,7 +34,7 @@ cops_dbsmartbackup_confs:
   mydb:
     conf_path: /srv/backups/mydb.conf
     keep_lasts: 1
-    type: postgres
+    type: postgresql
     keep_days: 2
     keep_logs: 7
     _periodicity: "0 3 * * *"
