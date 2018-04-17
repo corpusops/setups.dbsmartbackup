@@ -9,16 +9,16 @@ cops_dbsmartbackup_conf: []
 # When this is enabled, the project user/group is also granted full perms
 # (attention, uids!)
 cops_dbsmartbackup__supereditors_paths:
-  - "{project_root}"
-  - "{data_root}"
+  - "{{vars['cops_dbsmartbackup_project_root']}}"
+  - "{{vars['cops_dbsmartbackup_data_root']}}"
 # space separated string of uids to allow to write inside
 # projetct directories (used in development through posix ACLS setter)
 cops_dbsmartbackup__supereditors: >-
   {{ ansible_env.get(
       'SUPEREDITORS', cops_supereditors|default('')
      ) | copsf_splitstrip | to_json }}
-cops_dbsmartbackup_supereditors_paths: "{_supereditors_paths}"
-cops_dbsmartbackup_supereditors: "{_supereditors}"
+cops_dbsmartbackup_supereditors_paths: "{{vars['cops_dbsmartbackup__supereditors_paths']}}"
+cops_dbsmartbackup_supereditors: "{{vars['cops_dbsmartbackup__supereditors']}}"
 cops_dbsmartbackup_deb_packages: [jq]
 cops_dbsmartbackup_rh_packages: [jq]
 # extra conf to add to pgconf (directly added to a tuning conf file (string))
@@ -29,24 +29,24 @@ cops_dbsmartbackup_sysctls: []
 cops_dbsmartbackup_domain: "{{ansible_fqdn}}"
 # for internal monitoring
 cops_dbsmartbackup_name: 'dbsmartbackup'
-cops_dbsmartbackup_user: "{name}-user"
-cops_dbsmartbackup_group: "{name}-group"
-cops_dbsmartbackup_projects_dir: '{{corpusops_vars.projects_path}}'
-cops_dbsmartbackup_project_dir: '{projects_dir}/{name}'
-cops_dbsmartbackup_project_root: "{project_dir}/project"
-cops_dbsmartbackup_data_root: "{project_dir}/data"
-cops_dbsmartbackup_cfg: "{data_root}/config"
-cops_dbsmartbackup_fixperms: "{project_dir}/fixperms.sh"
+cops_dbsmartbackup_user: "{{vars['cops_dbsmartbackup_name']}}-user"
+cops_dbsmartbackup_group: "{{vars['cops_dbsmartbackup_name']}}-group"
+cops_dbsmartbackup_projects_dir: "{{corpusops_vars.projects_path}}"
+cops_dbsmartbackup_project_dir: "{{vars['cops_dbsmartbackup_projects_dir']}}/{{vars['cops_dbsmartbackup_name']}}"
+cops_dbsmartbackup_project_root: "{{vars['cops_dbsmartbackup_project_dir']}}/project"
+cops_dbsmartbackup_data_root: "{{vars['cops_dbsmartbackup_project_dir']}}/data"
+cops_dbsmartbackup_cfg: "{{vars['cops_dbsmartbackup_data_root']}}/config"
+cops_dbsmartbackup_fixperms: "{{vars['cops_dbsmartbackup_project_dir']}}/fixperms.sh"
 cops_dbsmartbackup_fixperms_cron_periodicity: "0 */2 * * *"
 #cops_dbsmartbackup_fixperms_cron_periodicity: ""
-cops_dbsmartbackup_fixperms_cron: "/etc/cron.d/{name}-fixperms"
+cops_dbsmartbackup_fixperms_cron: "/etc/cron.d/{{vars['cops_dbsmartbackup_name']}}-fixperms"
 # overrides this dir with values of cops_dbsmartbackup_env !
 cops_dbsmartbackup_env_overrides: {}
 cops_dbsmartbackup_env: {}
 #  PGPASSWORD: foobar
 cops_dbsmartbackup_secret_variables: []
 cops_dbsmartbackup_cops_format_resolve_topdb: false
-cops_dbsmartbackup_cops_do_format_resolve: true
+cops_dbsmartbackup_cops_do_format_resolve: false
 cops_dbsmartbackup_cops_sub_namespaces:
   s: {}
   lifecycle: {}
@@ -58,13 +58,13 @@ cops_dbsmartbackup_dbsmartbackup_bind_host: '127.0.0.1'
 ## entry point
 cops_dbsmartbackup_provision_dir: /provision_dir
 cops_dbsmartbackup_ep_ansible_args: >-
- -e "cops_cwd={provision_dir}"
+ -e "cops_cwd={{vars['cops_dbsmartbackup_provision_dir']}}"
  -e "cops_playbooks=${COPS_ROOT}/playbooks/corpusops"
  -e "cops_path=${COPS_ROOT}"
 cops_dbsmartbackup_ep_vaults:
-  - "{provision_dir}/.ansible/vaults/default.yml"
-  - "{provision_dir}/.ansible/vaults/app.yml"
-  - "{provision_dir}/.ansible/vaults/docker.yml"
+  - "{{vars['cops_dbsmartbackup_provision_dir']}}/.ansible/vaults/default.yml"
+  - "{{vars['cops_dbsmartbackup_provision_dir']}}/.ansible/vaults/app.yml"
+  - "{{vars['cops_dbsmartbackup_provision_dir']}}/.ansible/vaults/docker.yml"
   - /setup/reconfigure.yml
 cops_dbsmartbackup_ep_template: "../templates/app_entry_point"
 # Docker entrypoint settings, tags for cli and vars for playbook reuse via
@@ -124,49 +124,49 @@ cops_dbsmartbackup_s_managecontent: true
 cops_dbsmartbackup_ep_main_ep: "/entry_point"
 # service
 cops_dbsmartbackup_service: "cron"
-cops_dbsmartbackup_services: ["{service}"]
+cops_dbsmartbackup_services: ["{{vars['cops_dbsmartbackup_service']}}"]
 cops_dbsmartbackup_rhandlers: [restart_cops_dbsmartbackup]
 # use in docker (via a vault):
 cops_dbsmartbackup_reconfigure_services: []
-# cops_dbsmartbackup_reconfigure_services: ["post-start-{service}"]
+# cops_dbsmartbackup_reconfigure_services: ["post-start-{{vars['cops_dbsmartbackup_service']}}"]
 cops_dbsmartbackup_activated: true
 # Layout, files & configs
 cops_dbsmartbackup_stickymode: "2"
 cops_dbsmartbackup_files:
-  - {path: "{backups_prefix}",
+  - {path: "{{vars['cops_dbsmartbackup_backups_prefix']}}",
      owner: root, group: root, state: directory}
-  - {path: "{projects_dir}",
+  - {path: "{{vars['cops_dbsmartbackup_projects_dir']}}",
      owner: root, group: root, state: directory}
-  - {path: "{project_dir}",
+  - {path: "{{vars['cops_dbsmartbackup_project_dir']}}",
      owner: root, group: root, state: directory}
-  - {path: "{project_root}",
-     owner: "{user}", group: "{group}",
-     state: directory, mode: "{stickymode}755"}
-  - {path: "{data_root}",
-     owner: "{user}", group: "{group}",
-     state: directory, mode: "{stickymode}755"}
-  - {path: "{cfg}",
-     owner: "{user}", group: "{group}",
-     state: directory, mode: "{stickymode}755"}
+  - {path: "{{vars['cops_dbsmartbackup_project_root']}}",
+     owner: "{{vars['cops_dbsmartbackup_user']}}", group: "{{vars['cops_dbsmartbackup_group']}}",
+     state: directory, mode: "{{vars['cops_dbsmartbackup_stickymode']}}755"}
+  - {path: "{{vars['cops_dbsmartbackup_data_root']}}",
+     owner: "{{vars['cops_dbsmartbackup_user']}}", group: "{{vars['cops_dbsmartbackup_group']}}",
+     state: directory, mode: "{{vars['cops_dbsmartbackup_stickymode']}}755"}
+  - {path: "{{vars['cops_dbsmartbackup_cfg']}}",
+     owner: "{{vars['cops_dbsmartbackup_user']}}", group: "{{vars['cops_dbsmartbackup_group']}}",
+     state: directory, mode: "{{vars['cops_dbsmartbackup_stickymode']}}755"}
 # Config files
 cops_dbsmartbackup_configs: []
 cops_dbsmartbackup_fixperms_configs:
   - {src: "../templates/fixperms.sh",
-     dest: "{fixperms}", mode: "0755",
+     dest: "{{vars['cops_dbsmartbackup_fixperms']}}", mode: "0755",
      owner: root, group: root}
 cops_dbsmartbackup_ep_configs:
   # script to reconfigure image before and after systemd is launched
   - {src: "../templates/reconfigure.sh",
-     dest: "{reconfigure}",
+     dest: "{{vars['cops_dbsmartbackup_reconfigure']}}",
      mode: "0755",
      owner: "root",
      group: "root"}
   - {src: "../templates/post-start-reconfigure.service",
-     dest: "/etc/systemd/system/post-start-{service}.service",
+     dest: "/etc/systemd/system/post-start-{{vars['cops_dbsmartbackup_service']}}.service",
      mode: "0644",
      owner: "root",
      group: "root"}
-  - {src: "{ep_template}",
+  - {src: "{{vars['cops_dbsmartbackup_ep_template']}}",
      dest: "/app_entry_point", mode: "0755",
      owner: root, group: root}
 # SystemD based reconfigure unit settings
@@ -174,11 +174,11 @@ cops_dbsmartbackup_reconfigure_service_stderr: ""
 cops_dbsmartbackup_reconfigure_service_stdout: ""
 cops_dbsmartbackup_reconfigure_unit_after: "network.target dbsmartbackup.service"
 cops_dbsmartbackup_reconfigure_install_wantedby: "multi-user.target"
-cops_dbsmartbackup_reconfigure: "{project_dir}/reconfigure.sh"
+cops_dbsmartbackup_reconfigure: "{{vars['cops_dbsmartbackup_project_dir']}}/reconfigure.sh"
 cops_dbsmartbackup_reconfigure_passenv: "ANSIBLE_PLAY ANSIBLE_FOLDER COPS_ROOT"
 cops_dbsmartbackup_reconfigure_verbosity: "-v"
 # Code synchronnisation settings
-cops_dbsmartbackup_push_codes_cwd: "{cops_cwd}"
+cops_dbsmartbackup_push_codes_cwd: "{{vars['cops_cwd']}}"
 cops_dbsmartbackup_push_codes_sync_mode: "{{ cops_installer_mode in ['vagrant'] and 'rsync' or 'git' }}"
 cops_dbsmartbackup_push_codes_file_tests:
   git: []
@@ -190,13 +190,13 @@ cops_dbsmartbackup_push_codes_rsync_submodule_opts:
   git:   ["-azv", "--exclude", "*.retry"]
   rsync: ["-azv", "--exclude", "*.retry"]
 cops_dbsmartbackup_push_codes:
-- path: "{project_root}"
-  origin_path: "{push_codes_cwd}"
+- path: "{{vars['cops_dbsmartbackup_project_root']}}"
+  origin_path: "{{vars['cops_dbsmartbackup_push_codes_cwd']}}"
   sync_mode: "{{cops_dbsmartbackup_push_codes_sync_mode}}"
   rsync_opts: "{{cops_dbsmartbackup_push_codes_rsync_opts[cops_dbsmartbackup_push_codes_sync_mode]}}"
   file_tests: "{{cops_dbsmartbackup_push_codes_file_tests[cops_dbsmartbackup_push_codes_sync_mode]}}"
-  owner: "{user}"
-  group: "{group}"
+  owner: "{{vars['cops_dbsmartbackup_user']}}"
+  group: "{{vars['cops_dbsmartbackup_group']}}"
   sub_paths:
   - path: local/setups.dbsmartbackup
     rsync_opts: "{{cops_dbsmartbackup_push_codes_rsync_submodule_opts[cops_dbsmartbackup_push_codes_sync_mode]}}"
@@ -223,7 +223,7 @@ cops_dbsmartbackup_default_conf_free_form: |
 cops_dbsmartbackup_default_conf_global_backup: ""
 cops_dbsmartbackup_default_conf_cron_mailto: ""
 cops_dbsmartbackup_default_conf_servername: "{{ansible_fqdn}}"
-cops_dbsmartbackup_default_conf_backup_path_prefix: "{backups_prefix}"
+cops_dbsmartbackup_default_conf_backup_path_prefix: "{{vars['cops_dbsmartbackup_backups_prefix']}}"
 cops_dbsmartbackup_default_conf_keep_lasts: 3
 cops_dbsmartbackup_default_conf_keep_days: 3
 cops_dbsmartbackup_default_conf_keep_weeks: 0
