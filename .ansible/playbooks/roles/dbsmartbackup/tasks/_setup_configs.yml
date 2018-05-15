@@ -11,4 +11,3 @@
     trim_blocks: "{{item.trim_blocks|default(False)}}"
   with_list: "{{cops_dbsmartbackup_vars.configs}}"
   tags: [cops_dbsmartbackup_configs]
-  notify: "{{cops_dbsmartbackup_vars.rhandlers}}"

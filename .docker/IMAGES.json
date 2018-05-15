@@ -1,9 +1,16 @@
 {
-  "images": [
-    {
-      "builder_type": "packer",
-      "version": "latest",
-      "name": "dbsmartbackup"
-    }
-  ]
+	"images": [
+		{
+			"tag": "corpusops/dbsmartbackup:latest",
+			"builder_type": "docker",
+			"dockerfile": "Dockerfile",
+			"extra_args": "--build-arg VERSION={img_parts[tag]}"
+		},
+		{
+			"tag": "corpusops/dbsmartbackup:dev",
+			"builder_type": "docker",
+			"dockerfile": "Dockerfile.dev",
+			"extra_args": "--build-arg VERSION={img_parts[tag]}"
+		}
+	]
 }

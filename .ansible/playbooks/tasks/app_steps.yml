@@ -3,13 +3,26 @@
     content: |-
       {% set r = {} %}
       {% set _ = r.update({'only_steps': only_steps|default(False)}) %}
+
       {% set only_steps = r['only_steps'] %}
+      #
+      {% set _ = r.update({'cops_dbsmartbackup_s_users_user':      cops_dbsmartbackup_s_users_user    |default(cops_dbsmartbackup_s_users|default(cops_dbsmartbackup_lifecycle_app_setup|default(cops_dbsmartbackup_lifecycle_app|default(not only_steps))))}) %}
+      {% set cops_dbsmartbackup_s_users_user = r['cops_dbsmartbackup_s_users_user'] %}
+      #
+      {% set _ = r.update({'cops_dbsmartbackup_s_users_group':      cops_dbsmartbackup_s_users_group    |default(cops_dbsmartbackup_s_users|default(cops_dbsmartbackup_lifecycle_app_setup|default(cops_dbsmartbackup_lifecycle_app|default(not only_steps))))}) %}
+      {% set cops_dbsmartbackup_s_users_group = r['cops_dbsmartbackup_s_users_group'] %}
+      #
+      {% set _ = r.update({'cops_dbsmartbackup_s_docker_reconfigure': cops_dbsmartbackup_s_docker_reconfigure|default(False)}) %}
+      {% set cops_dbsmartbackup_s_docker_reconfigure = r['cops_dbsmartbackup_s_docker_reconfigure'] %}
       #
       {% set _ = r.update({'cops_dbsmartbackup_lifecycle_app_push_code': cops_dbsmartbackup_lifecycle_app_push_code|default(cops_dbsmartbackup_lifecycle_app|default(not only_steps))}) %}
       {% set cops_dbsmartbackup_lifecycle_app_push_code = r['cops_dbsmartbackup_lifecycle_app_push_code'] %}
       #
       {% set _ = r.update({'cops_dbsmartbackup_s_prerequisites_client_postgresql':   cops_dbsmartbackup_s_prerequisites_client_postgresql |default(cops_dbsmartbackup_s_prerequisites|default(cops_dbsmartbackup_lifecycle_app_setup|default(cops_dbsmartbackup_lifecycle_app|default(not only_steps))))}) %}
       {% set cops_dbsmartbackup_s_prerequisites_client_postgresql = r['cops_dbsmartbackup_s_prerequisites_client_postgresql'] %}
+      #
+      {% set _ = r.update({'cops_dbsmartbackup_s_healthchecks':        cops_dbsmartbackup_s_healthchecks       |default(cops_dbsmartbackup_lifecycle_app_setup|default(cops_dbsmartbackup_lifecycle_app|default(not only_steps)))}) %}
+      {% set cops_dbsmartbackup_s_healthchecks = r['cops_dbsmartbackup_s_healthchecks'] %}
       #
       {% set _ = r.update({'cops_dbsmartbackup_s_prerequisites_pkgs':                cops_dbsmartbackup_s_prerequisites_pkgs              |default(cops_dbsmartbackup_s_prerequisites|default(cops_dbsmartbackup_lifecycle_app_setup|default(cops_dbsmartbackup_lifecycle_app|default(not only_steps))))}) %}
       {% set cops_dbsmartbackup_s_prerequisites_pkgs = r['cops_dbsmartbackup_s_prerequisites_pkgs'] %}
@@ -23,19 +36,28 @@
       {% set _ = r.update({'cops_dbsmartbackup_s_setup_backup_confs':                cops_dbsmartbackup_s_setup_backup_confs              |default(cops_dbsmartbackup_s_setup        |default(cops_dbsmartbackup_lifecycle_app_setup|default(cops_dbsmartbackup_lifecycle_app|default(not only_steps))))}) %}
       {% set cops_dbsmartbackup_s_setup_backup_confs = r['cops_dbsmartbackup_s_setup_backup_confs'] %}
       #
-      {% set _ = r.update({'cops_dbsmartbackup_s_users':          cops_dbsmartbackup_s_users         |default(cops_dbsmartbackup_lifecycle_app_setup|default(cops_dbsmartbackup_lifecycle_app|default(not only_steps)))}) %}
+      {% set _ = r.update({'cops_dbsmartbackup_s_users': cops_dbsmartbackup_s_users_user or cops_dbsmartbackup_s_users_group}) %}
       {% set cops_dbsmartbackup_s_users = r['cops_dbsmartbackup_s_users'] %}
       #
       {% set _ = r.update({'cops_dbsmartbackup_s_layout':         cops_dbsmartbackup_s_layout        |default(cops_dbsmartbackup_lifecycle_app_setup|default(cops_dbsmartbackup_lifecycle_app|default(not only_steps)))}) %}
       {% set cops_dbsmartbackup_s_layout = r['cops_dbsmartbackup_s_layout'] %}
       #
+      {% set _ = r.update({'cops_dbsmartbackup_s_fixperms_run': cops_dbsmartbackup_s_fixperms_run|default(cops_dbsmartbackup_s_first_fixperms|default(not only_steps) or cops_dbsmartbackup_s_end_fixperms|default(not only_steps))}) %}
+      {% set cops_dbsmartbackup_s_fixperms_configs = r['cops_dbsmartbackup_s_fixperms_configs'] %}
+      #
+      {% set _ = r.update({'cops_dbsmartbackup_s_fixperms_configs': cops_dbsmartbackup_s_fixperms_configs|default(cops_dbsmartbackup_s_first_fixperms|default(not only_steps) or cops_dbsmartbackup_s_end_fixperms|default(not only_steps))}) %}
+      {% set cops_dbsmartbackup_s_fixperms_configs = r['cops_dbsmartbackup_s_fixperms_configs'] %}
+      #
       {% set _ = r.update({'cops_dbsmartbackup_s_first_fixperms': cops_dbsmartbackup_s_first_fixperms|default(cops_dbsmartbackup_lifecycle_app_setup|default(cops_dbsmartbackup_lifecycle_app|default(not only_steps)))}) %}
       {% set cops_dbsmartbackup_s_first_fixperms = r['cops_dbsmartbackup_s_first_fixperms'] %}
       #
-      {% set _ = r.update({'cops_dbsmartbackup_s_workers':        cops_dbsmartbackup_s_workers       |default(cops_dbsmartbackup_lifecycle_app_setup|default(cops_dbsmartbackup_lifecycle_app|default(not only_steps)))}) %}
+      {% set _ = r.update({'cops_dbsmartbackup_s_workers_service':  cops_dbsmartbackup_s_workers_service|default(cops_dbsmartbackup_s_workers |default(cops_dbsmartbackup_lifecycle_app_setup|default(cops_dbsmartbackup_lifecycle_app|default(not only_steps))))}) %}
+      {% set cops_dbsmartbackup_s_workers_service = r['cops_dbsmartbackup_s_workers_service'] %}
+      #
+      {% set _ = r.update({'cops_dbsmartbackup_s_workers': cops_dbsmartbackup_s_workers_service}) %}
       {% set cops_dbsmartbackup_s_workers = r['cops_dbsmartbackup_s_workers'] %}
       #
-      {% set _ = r.update({'cops_dbsmartbackup_s_entry_point':    cops_dbsmartbackup_s_entry_point   |default(cops_dbsmartbackup_lifecycle_app_setup|default(cops_dbsmartbackup_lifecycle_app|default(not only_steps)))}) %}
+      {% set _ = r.update({'cops_dbsmartbackup_s_entry_point': (cops_dbsmartbackup_s_entry_point|default(cops_dbsmartbackup_lifecycle_app_setup|default(cops_dbsmartbackup_lifecycle_app|default(not only_steps)))) and ansible_virtualization_type in ['docker']}) %}
       {% set cops_dbsmartbackup_s_entry_point = r['cops_dbsmartbackup_s_entry_point'] %}
       #
       {% set _ = r.update({'cops_dbsmartbackup_s_end_fixperms':   cops_dbsmartbackup_s_end_fixperms  |default(cops_dbsmartbackup_lifecycle_app_setup|default(cops_dbsmartbackup_lifecycle_app|default(not only_steps)))}) %}
@@ -50,7 +72,7 @@
       {% set _ = r.update({'cops_dbsmartbackup_s_setup': ( cops_dbsmartbackup_s_setup_backup_confs or cops_dbsmartbackup_s_setup_configs)}) %}
       {% set cops_dbsmartbackup_s_setup = r['cops_dbsmartbackup_s_setup'] %}
       #
-      {% set _ = r.update({'cops_dbsmartbackup_lifecycle_app_level_1_steps': ( cops_dbsmartbackup_s_users or cops_dbsmartbackup_s_layout or cops_dbsmartbackup_s_first_fixperms or cops_dbsmartbackup_s_prerequisites or cops_dbsmartbackup_s_setup or cops_dbsmartbackup_s_workers or cops_dbsmartbackup_s_entry_point or cops_dbsmartbackup_s_managecontent or cops_dbsmartbackup_s_end_fixperms)}) %}
+      {% set _ = r.update({'cops_dbsmartbackup_lifecycle_app_level_1_steps': ( cops_dbsmartbackup_s_users or cops_dbsmartbackup_s_layout or cops_dbsmartbackup_s_first_fixperms or cops_dbsmartbackup_s_prerequisites or cops_dbsmartbackup_s_setup or cops_dbsmartbackup_s_workers or cops_dbsmartbackup_s_entry_point or cops_dbsmartbackup_s_managecontent or cops_dbsmartbackup_s_end_fixperms or cops_dbsmartbackup_s_healthchecks or cops_dbsmartbackup_s_docker_reconfigure)}) %}
       {% set cops_dbsmartbackup_lifecycle_app_level_1_steps = r['cops_dbsmartbackup_lifecycle_app_level_1_steps'] %}
       #
       {% set _ = r.update({'cops_dbsmartbackup_lifecycle_app_setup': (cops_dbsmartbackup_lifecycle_app_setup|default( (cops_dbsmartbackup_lifecycle_app|default(False)) or ( cops_dbsmartbackup_lifecycle_app_level_1_steps)))}) %}

@@ -32,7 +32,8 @@ cops_dbsmartbackup_name: 'dbsmartbackup'
 cops_dbsmartbackup_user: "{{vars['cops_dbsmartbackup_name']}}-user"
 cops_dbsmartbackup_group: "{{vars['cops_dbsmartbackup_name']}}-group"
 cops_dbsmartbackup_projects_dir: "{{corpusops_vars.projects_path}}"
-cops_dbsmartbackup_project_dir: "{{vars['cops_dbsmartbackup_projects_dir']}}/{{vars['cops_dbsmartbackup_name']}}"
+cops_dbsmartbackup_project_sdir: "{{vars['cops_dbsmartbackup_name']}}"
+cops_dbsmartbackup_project_dir: "{{vars['cops_dbsmartbackup_projects_dir']}}/{{vars['cops_dbsmartbackup_project_sdir']}}"
 cops_dbsmartbackup_project_root: "{{vars['cops_dbsmartbackup_project_dir']}}/project"
 cops_dbsmartbackup_data_root: "{{vars['cops_dbsmartbackup_project_dir']}}/data"
 cops_dbsmartbackup_cfg: "{{vars['cops_dbsmartbackup_data_root']}}/config"
@@ -57,78 +58,25 @@ cops_dbsmartbackup_dbsmartbackup_bind_host: '127.0.0.1'
 # templates
 ## entry point
 cops_dbsmartbackup_provision_dir: /provision_dir
-cops_dbsmartbackup_ep_ansible_args: >-
- -e "cops_cwd={{vars['cops_dbsmartbackup_provision_dir']}}"
- -e "cops_playbooks=${COPS_ROOT}/playbooks/corpusops"
- -e "cops_path=${COPS_ROOT}"
-cops_dbsmartbackup_ep_vaults:
-  - "{{vars['cops_dbsmartbackup_provision_dir']}}/.ansible/vaults/default.yml"
-  - "{{vars['cops_dbsmartbackup_provision_dir']}}/.ansible/vaults/app.yml"
-  - "{{vars['cops_dbsmartbackup_provision_dir']}}/.ansible/vaults/docker.yml"
-  - /setup/reconfigure.yml
 cops_dbsmartbackup_ep_template: "../templates/app_entry_point"
+cops_dbsmartbackup_ep_playbook: ".ansible/playbooks/site.yml"
+cops_dbsmartbackup_ep_main_ep: "/entry_point"
 # Docker entrypoint settings, tags for cli and vars for playbook reuse via
 # conditionals
-cops_dbsmartbackup_ep_folder: ".ansible"
-cops_dbsmartbackup_ep_playbook: "site.yml"
-cops_dbsmartbackup_ep_skip_tags: "{{(
-  'cops_dbsmartbackup_lifecycle_app_push_code,'
-  'cops_dbsmartbackup_s_entry_point,'
-  'cops_dbsmartbackup_s_users,'
-  'cops_dbsmartbackup_s_first_fixperms,'
-  'cops_dbsmartbackup_s_layout,'
-  'cops_dbsmartbackup_s_prerequisites,'
-  'cops_dbsmartbackup_s_workers,'
-  'cops_dbsmartbackup_s_managecontent,'
-  'cops_dbsmartbackup_s_end_fixperms,'
-  )}}"
-cops_dbsmartbackup_ep_post_start_skip_tags: "{{(
-  'cops_dbsmartbackup_lifecycle_app_push_code,'
-  'cops_dbsmartbackup_s_entry_point,'
-  'cops_dbsmartbackup_s_users,'
-  'cops_dbsmartbackup_s_first_fixperms,'
-  'cops_dbsmartbackup_s_layout,'
-  'cops_dbsmartbackup_s_prerequisites,'
-  'cops_dbsmartbackup_s_setup,'
-  'cops_dbsmartbackup_s_workers,'
-  )}}"
 # global orchestration steps (db, code sync, web & workers prereqs, dbsmartbackup config)
 cops_dbsmartbackup_become: true
-cops_dbsmartbackup_lifecycle_app: true
-cops_dbsmartbackup_lifecycle_app_push_code: true
-cops_dbsmartbackup_lifecycle_app_setup: true
 # dbsmartbackup & project deployment steps
-cops_dbsmartbackup_s_vars: true
-
-cops_dbsmartbackup_s_entry_point: true
-cops_dbsmartbackup_s_users: true
-cops_dbsmartbackup_s_users_group: true
-cops_dbsmartbackup_s_users_user: true
-cops_dbsmartbackup_s_first_fixperms: true
-cops_dbsmartbackup_s_fixperms_configs: true
-cops_dbsmartbackup_s_fixperms_run: true
-cops_dbsmartbackup_s_layout: true
-cops_dbsmartbackup_s_layout_layout: true
-cops_dbsmartbackup_s_prerequisites: true
-cops_dbsmartbackup_s_prerequisites_pkgs: true
-cops_dbsmartbackup_s_prerequisites_client_postgresql: true
-cops_dbsmartbackup_s_prerequisites_dbsmartbackup: true
-cops_dbsmartbackup_s_setup: true
-cops_dbsmartbackup_s_setup_configs: true
-cops_dbsmartbackup_s_setup_backup_confs: true
-cops_dbsmartbackup_s_workers_service: true
-cops_dbsmartbackup_s_workers_checks: true
-cops_dbsmartbackup_s_end_fixperms: true
-cops_dbsmartbackup_s_managecontent: true
-#
-cops_dbsmartbackup_ep_main_ep: "/entry_point"
 # service
 cops_dbsmartbackup_service: "cron"
 cops_dbsmartbackup_services: ["{{vars['cops_dbsmartbackup_service']}}"]
 cops_dbsmartbackup_rhandlers: [restart_cops_dbsmartbackup]
-# use in docker (via a vault):
-cops_dbsmartbackup_reconfigure_services: []
-# cops_dbsmartbackup_reconfigure_services: ["post-start-{{vars['cops_dbsmartbackup_service']}}"]
+## use in docker (via a vault):
+cops_dbsmartbackup_reconfigure_services: |-
+  {% set ret = [] %}
+  {% if ansible_virtualization_type in ['docker'] %}
+  {% set _ = ret.append("post-start-{{vars['cops_dbsmartbackup_service']}}") %}
+  {% endif %}
+  {{ ret | to_json }}
 cops_dbsmartbackup_activated: true
 # Layout, files & configs
 cops_dbsmartbackup_stickymode: "2"
@@ -170,16 +118,22 @@ cops_dbsmartbackup_ep_configs:
      dest: "/app_entry_point", mode: "0755",
      owner: root, group: root}
 # SystemD based reconfigure unit settings
-cops_dbsmartbackup_reconfigure_service_stderr: ""
-cops_dbsmartbackup_reconfigure_service_stdout: ""
-cops_dbsmartbackup_reconfigure_unit_after: "network.target dbsmartbackup.service"
+cops_dbsmartbackup_reconfigure_service_stderr: "journal{% if ansible_virtualization_type in ['docker']%}+console{%endif%}"
+cops_dbsmartbackup_reconfigure_service_stdout: "journal{% if ansible_virtualization_type in ['docker']%}+console{%endif%}"
+cops_dbsmartbackup_reconfigure_unit_after: "network.target cron.service"
 cops_dbsmartbackup_reconfigure_install_wantedby: "multi-user.target"
-cops_dbsmartbackup_reconfigure: "{{vars['cops_dbsmartbackup_project_dir']}}/reconfigure.sh"
-cops_dbsmartbackup_reconfigure_passenv: "ANSIBLE_PLAY ANSIBLE_FOLDER COPS_ROOT"
-cops_dbsmartbackup_reconfigure_verbosity: "-v"
+cops_dbsmartbackup_reconfigure: "{{vars['cops_dbsmartbackup_provision_dir']}}/reconfigure.sh"
+cops_dbsmartbackup_reconfigure_passenv: >
+  COPS_ROOT NO_SILENT NO_OUTPUT NONINTERACTIVE
+  ANSIBLE_CWD ANSIBLE_PLAY ANSIBLE_VARARGS ANSIBLE_ARGS
+  A_VAULTS_FOLDERS A_VAULTS A_EXTRA_VAULTS
+  A_INVENTORY A_ENV_NAME NO_DEFAULT_VAULTS
 # Code synchronnisation settings
 cops_dbsmartbackup_push_codes_cwd: "{{vars['cops_cwd']}}"
-cops_dbsmartbackup_push_codes_sync_mode: "{{ cops_installer_mode in ['vagrant'] and 'rsync' or 'git' }}"
+cops_dbsmartbackup_push_codes_sync_mode: "{{ (
+  cops_installer_mode in ['vagrant'] or
+  ansible_virtualization_type in ['docker']
+  ) and 'rsync' or 'git' }}"
 cops_dbsmartbackup_push_codes_file_tests:
   git: []
   rsync: [".git"]
@@ -197,10 +151,6 @@ cops_dbsmartbackup_push_codes:
   file_tests: "{{cops_dbsmartbackup_push_codes_file_tests[cops_dbsmartbackup_push_codes_sync_mode]}}"
   owner: "{{vars['cops_dbsmartbackup_user']}}"
   group: "{{vars['cops_dbsmartbackup_group']}}"
-  sub_paths:
-  - path: local/setups.dbsmartbackup
-    rsync_opts: "{{cops_dbsmartbackup_push_codes_rsync_submodule_opts[cops_dbsmartbackup_push_codes_sync_mode]}}"
-    is_submodule: true
 # SSH deploy settings -> env vault
 cops_deploy_ssh_key_paths:
   deploy:

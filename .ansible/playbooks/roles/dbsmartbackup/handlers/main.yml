@@ -18,7 +18,7 @@
           (ansible_service_mgr == 'systemd'))"
 - listen: restart_cops_dbsmartbackup
   become: true
-  service:
+  cops_service:
     state: restarted
     name: "{{item}}"
   with_items: "{{cops_dbsmartbackup_vars.services}}"
@@ -37,7 +37,7 @@
           (ansible_service_mgr == 'systemd'))"
 - listen: reload_cops_dbsmartbackup
   become: true
-  service:
+  cops_service:
     state: reloaded
     name: "{{item}}"
   with_items: "{{cops_dbsmartbackup_vars.services}}"

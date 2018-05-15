@@ -1,0 +1,7 @@
+---
+# Configure things before systemd launches
+- name: maybe enable some services
+  changed_when: false
+  cops_service:
+    enabled: true
+    name: cron

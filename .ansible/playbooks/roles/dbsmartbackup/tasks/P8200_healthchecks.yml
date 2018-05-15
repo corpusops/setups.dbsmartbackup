@@ -1,0 +1,15 @@
+# check cron is running
+- tags: [cops_dbsmartbackup_s_healthchecks]
+  when: [cops_dbsmartbackup_s_healthchecks]
+  block:
+  - shell: |
+      service cron status >/dev/null 2>&1
+      echo $?
+    changed_when: false
+    when: "(corpusops_vars.has_services_manager and
+            cops_dbsmartbackup_vars.activated)"
+    register: cops_dbsmartbackup_check
+    until: "'0' == cops_dbsmartbackup_check.stdout.strip()"
+    retries: 10
+    delay: 1
+    tags: [dbsmartbackup, workers_check, dbsmartbackup_workers_check]

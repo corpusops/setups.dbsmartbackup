@@ -1,37 +1,15 @@
 ---
-- when: ["cops_dbsmartbackup_s_workers_service and corpusops_vars.has_services_manager"]
+- when: ["cops_dbsmartbackup_s_workers_service"]
   tags: ["cops_dbsmartbackup_s_workers_service"]
   block:
   # activate the main app service
-  - service:
+  - cops_service:
       state: "{{cops_dbsmartbackup_vars.activated | ternary('started', 'stopped')}}"
       enabled: "{{cops_dbsmartbackup_vars.activated | ternary(True, False)}}"
       name: "{{item}}"
     with_items: "{{cops_dbsmartbackup_vars.services}}"
-  # this will fail on non systemd hosts on purpose !
-  # if we have activated the reconfigure units (docker mode essentially)
-  - systemd:
-      enabled: "{{cops_dbsmartbackup_vars.activated | ternary(True, False)}}"
-      daemon_reload: yes
-      name: "{{item}}"
-    with_items: "{{cops_dbsmartbackup_vars.reconfigure_services}}"
   # force a reload/restart here
   - shell: echo "force service reload/restart"
     notify: "{{cops_dbsmartbackup_vars.rhandlers}}"
   - meta: flush_handlers
 
-# check cron is running
-- tags: [cops_dbsmartbackup_s_workers_checks]
-  when: [cops_dbsmartbackup_s_workers_checks]
-  block:
-  - shell: |
-      service cron status >/dev/null 2>&1
-      echo $?
-    changed_when: false
-    when: "(corpusops_vars.has_services_manager and
-            cops_dbsmartbackup_vars.activated)"
-    register: cops_dbsmartbackup_check
-    until: "'0' == cops_dbsmartbackup_check.stdout.strip()"
-    retries: 10
-    delay: 1
-    tags: [dbsmartbackup, workers_check, dbsmartbackup_workers_check]

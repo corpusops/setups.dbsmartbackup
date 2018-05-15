@@ -11,3 +11,10 @@
   with_list: "{{cops_dbsmartbackup_ep_configs}}"
   tags: [cops_dbsmartbackup_s_entry_point]
   when: "cops_dbsmartbackup_s_entry_point"
+# this will fail on non systemd hosts on purpose !
+# if we have activated the reconfigure units (docker mode essentially)
+- cops_service:
+    enabled: "{{cops_dbsmartbackup_vars.activated | ternary(True, False)}}"
+    daemon_reload: yes
+    name: "{{item}}"
+  with_items: "{{cops_dbsmartbackup_vars.reconfigure_services}}"
