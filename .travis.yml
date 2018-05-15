@@ -32,7 +32,7 @@ after_success:
   - docker images
   - |
     set -e;
-    for i in $IMAGES;
+    for i in $IMAGES;do
      if [ "x$RELEASE_DEBUG" = "x" ];then
        DEBUG=1 $funcs vv $release $i
      else
