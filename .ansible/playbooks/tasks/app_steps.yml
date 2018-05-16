@@ -63,8 +63,8 @@
       {% set _ = r.update({'cops_dbsmartbackup_s_end_fixperms':   cops_dbsmartbackup_s_end_fixperms  |default(cops_dbsmartbackup_lifecycle_app_setup|default(cops_dbsmartbackup_lifecycle_app|default(not only_steps)))}) %}
       {% set cops_dbsmartbackup_s_end_fixperms = r['cops_dbsmartbackup_s_end_fixperms'] %}
       #
-      {% set _ = r.update({'cops_dbsmartbackup_s_managecontent':  cops_dbsmartbackup_s_managecontent |default(cops_dbsmartbackup_lifecycle_app_setup|default(cops_dbsmartbackup_lifecycle_app|default(not only_steps)))}) %}
-      {% set cops_dbsmartbackup_s_managecontent = r['cops_dbsmartbackup_s_managecontent'] %}
+      {% set _ = r.update({'cops_dbsmartbackup_s_manage_content':  cops_dbsmartbackup_s_manage_content |default(cops_dbsmartbackup_lifecycle_app_setup|default(cops_dbsmartbackup_lifecycle_app|default(not only_steps)))}) %}
+      {% set cops_dbsmartbackup_s_manage_content = r['cops_dbsmartbackup_s_manage_content'] %}
       #
       {% set _ = r.update({'cops_dbsmartbackup_s_prerequisites': ( cops_dbsmartbackup_s_prerequisites_pkgs or cops_dbsmartbackup_s_prerequisites_dbsmartbackup or cops_dbsmartbackup_s_prerequisites_client_postgresql)}) %}
       {% set cops_dbsmartbackup_s_prerequisites = r['cops_dbsmartbackup_s_prerequisites'] %}
@@ -72,7 +72,7 @@
       {% set _ = r.update({'cops_dbsmartbackup_s_setup': ( cops_dbsmartbackup_s_setup_backup_confs or cops_dbsmartbackup_s_setup_configs)}) %}
       {% set cops_dbsmartbackup_s_setup = r['cops_dbsmartbackup_s_setup'] %}
       #
-      {% set _ = r.update({'cops_dbsmartbackup_lifecycle_app_level_1_steps': ( cops_dbsmartbackup_s_users or cops_dbsmartbackup_s_layout or cops_dbsmartbackup_s_first_fixperms or cops_dbsmartbackup_s_prerequisites or cops_dbsmartbackup_s_setup or cops_dbsmartbackup_s_workers or cops_dbsmartbackup_s_entry_point or cops_dbsmartbackup_s_managecontent or cops_dbsmartbackup_s_end_fixperms or cops_dbsmartbackup_s_healthchecks or cops_dbsmartbackup_s_docker_reconfigure)}) %}
+      {% set _ = r.update({'cops_dbsmartbackup_lifecycle_app_level_1_steps': ( cops_dbsmartbackup_s_users or cops_dbsmartbackup_s_layout or cops_dbsmartbackup_s_first_fixperms or cops_dbsmartbackup_s_prerequisites or cops_dbsmartbackup_s_setup or cops_dbsmartbackup_s_workers or cops_dbsmartbackup_s_entry_point or cops_dbsmartbackup_s_manage_content or cops_dbsmartbackup_s_end_fixperms or cops_dbsmartbackup_s_healthchecks or cops_dbsmartbackup_s_docker_reconfigure)}) %}
       {% set cops_dbsmartbackup_lifecycle_app_level_1_steps = r['cops_dbsmartbackup_lifecycle_app_level_1_steps'] %}
       #
       {% set _ = r.update({'cops_dbsmartbackup_lifecycle_app_setup': (cops_dbsmartbackup_lifecycle_app_setup|default( (cops_dbsmartbackup_lifecycle_app|default(False)) or ( cops_dbsmartbackup_lifecycle_app_level_1_steps)))}) %}

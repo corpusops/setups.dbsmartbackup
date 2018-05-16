@@ -29,8 +29,8 @@
     tags: [cops_dbsmartbackup_s_healthchecks]
     when: [cops_dbsmartbackup_s_healthchecks]
   - include_tasks: P8500_manage_content.yml
-    tags: [cops_dbsmartbackup_s_managecontent]
-    when: [cops_dbsmartbackup_s_managecontent]
+    tags: [cops_dbsmartbackup_s_manage_content]
+    when: [cops_dbsmartbackup_s_manage_content]
   - include_tasks: G9000_fixperms.yml
     tags: [cops_dbsmartbackup_s_end_fixperms]
     when: [cops_dbsmartbackup_s_end_fixperms]
