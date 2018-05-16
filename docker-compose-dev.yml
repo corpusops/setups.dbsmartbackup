@@ -52,8 +52,8 @@ x-image: &image_template
   #- "./local/corpusops.bootstrap/requirements:/srv/corpusops/corpusops.bootstrap/requirements"
   #- "./local/corpusops.bootstrap/docs:/srv/corpusops/corpusops.bootstrap/docs"
   # Remember: /setup/rootfs/ is synced inside the container /
-  - "./local/setup/rootfs/app_entry_point:/app_entry_point"
-  - "./reconfigure.sh:/provision_dir/reconfigure.sh"
+  #- "./local/setup/rootfs/app_entry_point:/app_entry_point"
+  #- "./reconfigure.sh:/provision_dir/reconfigure.sh"
 services:
   dbsmartbackup:
     <<:  [ *image_template ]
