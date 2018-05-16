@@ -5,12 +5,6 @@
 			"builder_type": "docker",
 			"dockerfile": "Dockerfile",
 			"extra_args": "--build-arg VERSION={img_parts[tag]}"
-		},
-		{
-			"tag": "corpusops/dbsmartbackup:dev",
-			"builder_type": "docker",
-			"dockerfile": "Dockerfile.dev",
-			"extra_args": "--build-arg VERSION={img_parts[tag]}"
 		}
 	]
 }

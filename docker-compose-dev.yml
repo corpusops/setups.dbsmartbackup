@@ -6,7 +6,7 @@ version: '3.5'
 #  SUPEREDITORS=$(id -u) docker-compose -f d*-compose-dev.yml  up -t 0 -d --force-recreate dbsmartbackup
 #
 x-image: &image_template
-  image: "corpusops/dbsmartbackup:dev"
+  image: "corpusops/dbsmartbackup"
   environment:
   - SUPEREDITORS=$SUPEREDITORS
   - DEBUG=1
