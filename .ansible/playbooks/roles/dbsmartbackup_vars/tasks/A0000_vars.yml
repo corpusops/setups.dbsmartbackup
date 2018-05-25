@@ -14,11 +14,11 @@
 
 # Generate passwords on remote box if not found in registry
 - name: "dbsmartbackup secrets -- {{dbsmartbackupsecret}}}"
-  include_tasks: _set_secret_variable.yml
-  loop_control: {loop_var: dbsmartbackupsecret}
-  with_items: "{{cops_dbsmartbackup_vars.secret_variables}}"
-  tags: [dbsmartbackup, vars, dbsmartbackup_vars]
+  loop_control: {loop_var: secretvariable}
+  with_items: "{{cops_dbsmartbackup_secret_variables}}"
   no_log: "{{not (cops_vars_debug|default(false))}}"
+  include_tasks: _set_secret_variable.yml
+
 
 # Post process some variables
 - name: "dbsmartbackup registry - postprocess"
