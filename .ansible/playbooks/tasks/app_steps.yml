@@ -81,7 +81,7 @@
       {% set _ = r.update({'cops_dbsmartbackup_lifecycle_app': ( cops_dbsmartbackup_lifecycle_app_push_code or cops_dbsmartbackup_lifecycle_app_setup)}) %}
       {% set cops_dbsmartbackup_lifecycle_app = r['cops_dbsmartbackup_lifecycle_app'] %}
       #
-      {% set _ = r.update({'cops_dbsmartbackup_s_vars': cops_dbsmartbackup_s_vars|default(cops_dbsmartbackup_lifecycle_app)}) %}
+      {% set _ = r.update({'cops_dbsmartbackup_s_vars': cops_dbsmartbackup_s_vars|default(cops_dbsmartbackup_lifecycle_app) or only_steps}) %}
       {% set cops_dbsmartbackup_s_vars = r['cops_dbsmartbackup_s_vars'] %}
       #
       {{ r | to_json }}
