@@ -64,6 +64,24 @@ cops_dbsmartbackup_confs:
       export RUNAS=""
 ```
 
+example to save (locally) all pg databases
+```yaml
+cops_dbsmartbackup_confs:
+  alldb:
+    conf_path: /srv/backups/alldb.conf
+    keep_lasts: 1
+    type: postgresql
+    keep_days: 2
+    keep_logs: 7
+    _periodicity: "0 3 * * *"
+    free_form: |
+      export HOST="localhost"
+      export DBNAMES="all"
+      export DBUSER="postgres"
+      export PGUSER="$DBUSER"
+      export RUNAS="$DBUSER"
+```
+
 ### Configuring manually
 
 - A dbsmartbackup job need two things and relies on a cron daemon:
