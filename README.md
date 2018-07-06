@@ -82,6 +82,67 @@ cops_dbsmartbackup_confs:
       export RUNAS="$DBUSER"
 ```
 
+### compose variant
+```yaml
+---
+services:
+  dbsmartbackup:
+    restart: unless-stopped
+    image: "corpusops/dbsmartbackup"
+    tmpfs: [/run, /run/lock]
+    volumes:
+    - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
+    - "/srv/docker/portus/local/data/backups:/srv/backups"
+    depends_on: [postgres, db]
+    links: [postgres, db]
+    environment:
+    - |
+      A_RECONFIGURE=---
+      only_steps: true
+      cops_dbsmartbackup_lifecycle_app_push_code: false
+      cops_dbsmartbackup_s_docker_reconfigure: true
+      cops_dbsmartbackup_s_first_fixperms: true
+      cops_dbsmartbackup_s_setup: true
+      cops_dbsmartbackup_s_manage_content: false
+      cops_dbsmartbackup_confs:
+        pg:
+           conf_path: /srv/backups/pg.conf
+           keep_lasts: 1
+           type: postgresql
+           keep_days: 2
+           keep_logs: 7
+           _periodicity: "0 3 * * *"
+           free_form: |
+             export HOST="postgres"
+             export DBNAMES="all"
+             export DBUSER="postgres"
+             export PGUSER="$$DBUSER"
+             export PASSWORD="xxx"
+             export PGPASSWORD="$$PASSWORD"
+             export RUNAS="$$(whoami)"
+        mysql:
+          conf_path: /srv/backups/mysql.conf
+          keep_lasts: 1
+          type: mysql
+          keep_days: 2
+          keep_logs: 7
+          _periodicity: "0 3 * * *"
+          free_form: |
+            export HOST="db"
+            export PORT="3306"
+            export MYSQL_PORT="$$PORT"
+            export DBNAMES="all"
+            export PASSWORD="xxx"
+            export DBUSER="root"
+            export RUNAS="$$(whoami)"
+    - |
+      A_POSTCONFIGURE=---
+      only_steps: true
+      cops_dbsmartbackup_lifecycle_app_push_code: false
+      cops_dbsmartbackup_s_manage_content: true
+```
+
+
 ### Configuring manually
 
 - A dbsmartbackup job need two things and relies on a cron daemon:
