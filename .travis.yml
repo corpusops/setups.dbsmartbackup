@@ -15,7 +15,7 @@ env:
       silent_rm="$silent rm -rf"
   matrix:
     - |
-      IMAGES="corpusops/dbsmartbackup:latest corpusops/dbsmartbackup:dev"
+      IMAGES="corpusops/dbsmartbackup:latest"
 language: python
 python: "2.7"
 before_install:
