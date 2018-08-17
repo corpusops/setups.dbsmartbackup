@@ -1,7 +1,15 @@
 ---
+- include_role: {name: corpusops.roles/services_db_postgresql_vars, public: yes}
+- shell: psql --version|awk '{print $3}'
+  register: psql_version
 # Configure things before systemd launches
-- name: maybe enable some services
-  changed_when: false
-  cops_service:
-    enabled: true
-    name: cron
+# maybe reinstall a pgclient different from the one bundled inside the image
+# - debug:
+#     msg: |-
+#       {{"{0}".format(corpusops_services_db_postgresql_version).split('.')[0]}} !=
+#       {{psql_version.stdout.split('.')[0]}}
+#   failed_when: true
+- include_role: {name: corpusops.roles/services_db_postgresql_client}
+  when: >
+    "{0}".format(corpusops_services_db_postgresql_version).split('.')[0] !=
+    psql_version.stdout.split('.')[0]
