@@ -5,6 +5,12 @@
 			"builder_type": "docker",
 			"dockerfile": "Dockerfile",
 			"extra_args": "--build-arg VERSION={img_parts[tag]}"
+		},
+		{
+			"tag": "corpusops/dbsmartbackup:pg10",
+			"builder_type": "docker",
+			"dockerfile": "Dockerfile.pg10",
+			"extra_args": "--build-arg VERSION={img_parts[tag]}"
 		}
 	]
 }
