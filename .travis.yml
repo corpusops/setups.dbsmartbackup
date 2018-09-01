@@ -13,7 +13,7 @@ env:
       apply_role="sudo -E $silent $COPS_ROOT/bin/cops_apply_role -vvvvv" \
       release="$COPS_ROOT/hacking/docker_release" \
       silent_rm="$silent rm -rf"
-  matrix: 
+  matrix:
     - |
       IMAGES="corpusops/dbsmartbackup:pg10"
     - |
