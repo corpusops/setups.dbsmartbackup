@@ -10,7 +10,7 @@
 ### Description
 
 This repository produces all those docker images:
-- [corpusops/dbsmartbackup](https://hub.docker.com/r/corpusops/dbsmartbackup/)
+- [corpusops/dbsmartbackup-legacy](https://hub.docker.com/r/corpusops/dbsmartbackup-legacy/)
 
 ### Volumes
 - We use two main volumes!
