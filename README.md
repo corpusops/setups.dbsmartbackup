@@ -1,8 +1,5 @@
 # Docker based image for dbsmartbackup
 
-## Support development
-- [paypal](https://paypal.me/kiorky)
-
 
 ## corpusops/dbsmartbackup
 ### Description
