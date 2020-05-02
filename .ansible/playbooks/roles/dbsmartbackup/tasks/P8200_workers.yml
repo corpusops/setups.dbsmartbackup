@@ -7,7 +7,7 @@
       state: "{{cops_dbsmartbackup_vars.activated | ternary('started', 'stopped')}}"
       enabled: "{{cops_dbsmartbackup_vars.activated | ternary(True, False)}}"
       name: "{{item}}"
-    with_items: "{{cops_dbsmartbackup_vars.services}}"
+    loop: "{{cops_dbsmartbackup_vars.services}}"
   # force a reload/restart here
   - shell: echo "force service reload/restart"
     notify: "{{cops_dbsmartbackup_vars.rhandlers}}"

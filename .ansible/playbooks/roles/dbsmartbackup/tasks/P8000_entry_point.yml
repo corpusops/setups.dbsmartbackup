@@ -17,4 +17,4 @@
     enabled: "{{cops_dbsmartbackup_vars.activated | ternary(True, False)}}"
     daemon_reload: yes
     name: "{{item}}"
-  with_items: "{{cops_dbsmartbackup_vars.reconfigure_services}}"
+  loop: "{{cops_dbsmartbackup_vars.reconfigure_services}}"
